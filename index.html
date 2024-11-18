@@ -1,109 +1,43 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>学生证照片生成器</title>
-    <meta name="description" content="学生证照片生成器 - 轻松生成学生证照片，支持自定义姓名、学号、学校名称、院系和专业。">
-    <meta name="keywords" content="学生证, 照片生成器, 学生证照片, 自定义学生证, 学生证制作">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://studentid.cdtools.click/index.html">
-    <meta property="og:title" content="学生证照片生成器">
-    <meta property="og:description" content="轻松生成学生证照片，支持自定义姓名、学号、学校名称、院系和专业。">
-    <meta property="og:url" content="https://studentid.cdtools.click/index.html">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://studentid.cdtools.click/studentID-preview.jpg">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="学生证照片生成器">
-    <meta name="twitter:description" content="轻松生成学生证照片，支持自定义姓名、学号、学校名称、院系和专业。">
-    <meta name="twitter:image" content="https://studentid.cdtools.click/studentID-preview.jpg">
-    <link rel="stylesheet" href="styles.css">
-    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-    <script>
-        LA.init({ id: "3KHNju0NS6KdmK8g", ck: "3KHNju0NS6KdmK8g" });
-    </script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3594081485685271" crossorigin="anonymous"></script>
-    <script>
-        var _hmt = _hmt || [];
-        (function () {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?7fdd626d87b4c2ab5afee04e5fcd0b9d";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学生证照片生成器</title>
+  <meta name="description" content="学生证照片生成器 - 轻松生成学生证照片，支持自定义姓名、学号、学校名称、院系和专业。">
+  <meta name="keywords" content="学生证, 照片生成器, 学生证照片, 自定义学生证, 学生证制作">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://studentid.cdtools.click/index.html">
+  <meta property="og:title" content="学生证照片生成器">
+  <meta property="og:description" content="轻松生成学生证照片，支持自定义姓名、学号、学校名称、院系和专业。">
+  <meta property="og:url" content="https://studentid.cdtools.click/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://studentid.cdtools.click/studentID-preview.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="学生证照片生成器">
+  <meta name="twitter:description" content="轻松生成学生证照片，支持自定义姓名、学号、学校名称、院系和专业。">
+  <meta name="twitter:image" content="https://studentid.cdtools.click/studentID-preview.jpg">
+  <link rel="stylesheet" href="styles.css">
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>
+    LA.init({ id: "3KHNju0NS6KdmK8g", ck: "3KHNju0NS6KdmK8g" });
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3594081485685271" crossorigin="anonymous"></script>
+  <script>
+    var _hmt = _hmt || [];
+    (function () {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?7fdd626d87b4c2ab5afee04e5fcd0b9d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 </head>
 
 <body>
-    <div class="container">
-        <h1>学生证照片生成器</h1>
-
-        <div class="form-container">
-            <div class="preview-row">
-                <div class="preview-left">
-                    <form id="studentForm">
-                        <div class="input-group">
-                            <label for="name">姓名：</label>
-                            <input type="text" id="name" value="张三" required>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="studentId">学号：</label>
-                            <input type="text" id="studentId" value="20230001" required>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="school">学校名称：</label>
-                            <input type="text" id="school" value="清华大学" required>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="department">院系：</label>
-                            <input type="text" id="department" value="计算机系" required>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="major">专业：</label>
-                            <input type="text" id="major" value="软件工程" required>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="validDate">有效期：</label>
-                            <input type="date" id="validDate" value="2024-12-31" required>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="photo">上传照片：</label>
-                            <input type="file" id="photo" accept="image/*" required>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="background">选择背景：</label>
-                            <select id="background">
-                                <option value="desk1" selected>木质桌面</option>
-                                <option value="desk2">大理石桌面</option>
-                                <option value="desk3">白色桌面</option>
-                                <option value="desk4">木质桌面（深色）</option>
-                            </select>
-                        </div>
-
-                        <div class="upload-logo">
-                            <label for="logoUpload">上传校徽:</label>
-                            <input type="file" id="logoUpload" accept="image/*">
-                        </div>
-                    </form>
-                </div>
-                <div class="preview-right">
-                    <div class="preview-container">
-                        <canvas id="previewCanvas"></canvas>
-                        <button id="downloadBtn" style="display: none;">下载照片</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
