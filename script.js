@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 监听所有输入变化
     const inputs = document.querySelectorAll('input, select');
     inputs.forEach(input => {
-        input.addEventListener('input', generateStudentCard);
+        input.addEventListener('input', debounce(generateStudentCard, 300));
     });
 
 
@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
             // 添加阴影效果
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-            ctx.shadowBlur = 20;
-            ctx.shadowOffsetX = 5;
-            ctx.shadowOffsetY = 5;
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            ctx.shadowBlur = 15;
+            ctx.shadowOffsetX = 3;
+            ctx.shadowOffsetY = 3;
 
             // 绘制学生证（白色背景）
             const cardWidth = 400;
@@ -89,6 +89,8 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.shadowBlur = 0;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
+
+
 
             // 添加学生证边框
             ctx.strokeStyle = '#1B4B8A';
@@ -112,12 +114,12 @@ document.addEventListener('DOMContentLoaded', function () {
             // 绘制照片区域
             ctx.strokeStyle = '#1B4B8A';
             ctx.lineWidth = 1;
-            ctx.strokeRect(cardX + 20, cardY + 50, 100, 140);
+            ctx.strokeRect(cardX + 20, cardY + 60, 100, 140);
 
             // 绘制学生照片
             if (data.photo) {
                 const photo = await loadImage(URL.createObjectURL(data.photo));
-                ctx.drawImage(photo, cardX + 20, cardY + 50, 100, 140);
+                ctx.drawImage(photo, cardX + 20, cardY + 60, 100, 140);
             }
 
             // 绘制信息文字
@@ -130,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const lineHeight = 30;
 
             // 绘制横线
-            for (let i = 0; i <= 6; i++) {
+            for (let i = 0; i <= 5; i++) {
                 ctx.beginPath();
                 ctx.moveTo(startX, startY + i * lineHeight);
                 ctx.lineTo(cardX + cardWidth - 20, startY + i * lineHeight);
@@ -167,16 +169,19 @@ document.addEventListener('DOMContentLoaded', function () {
             // 绘制校徽（半透明）
             if (logoImage) {
                 const logoSize = 50; // 校徽大小
-                ctx.globalAlpha = 0.5; // 设置校徽半透明
+                ctx.globalAlpha = 0.7; // 设置校徽半透明
                 ctx.drawImage(logoImage, cardX + cardWidth - logoSize - 10, cardY + 10, logoSize, logoSize);
                 ctx.globalAlpha = 1.0; // 恢复不透明
             }
+
+            // 添加做旧效果
+            applyVintageEffect(ctx, cardX, cardY, cardWidth, cardHeight);
 
             // 显示下载按钮
             downloadBtn.style.display = 'inline-block';
         } catch (error) {
             console.error('生成学生证失败:', error);
-            alert('背景图片加载失败，请确保图片路径正确');
+            alert('生成学生证失败，请检查输入数据和图片路径');
         }
     }
     generateStudentCard()
@@ -200,5 +205,39 @@ document.addEventListener('DOMContentLoaded', function () {
         link.href = canvas.toDataURL('image/png');
         link.click();
     });
+
+    // 防抖函数
+    function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    // 添加做旧效果的函数
+    function applyVintageEffect(ctx, x, y, width, height) {
+        // 模拟褪色效果
+        ctx.fillStyle = 'rgba(255, 235, 205, 0.1)'; // 浅棕色滤镜
+        ctx.fillRect(x, y, width, height);
+
+        // 添加噪点
+        const imageData = ctx.getImageData(x, y, width, height);
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            const noise = (Math.random() - 0.5); // 噪点强度
+            data[i] += noise;     // Red
+            data[i + 1] += noise; // Green
+            data[i + 2] += noise; // Blue
+        }
+        ctx.putImageData(imageData, x, y);
+
+        // 添加边缘磨损效果
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 3]); // 虚线
+        ctx.strokeRect(x, y, width, height);
+        ctx.setLineDash([]); // 重置虚线
+    }
 
 }); 
