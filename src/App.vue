@@ -20,31 +20,12 @@ onMounted(() => {
   ctx.value = canvas.value.getContext("2d");
   downloadBtn.value = document.getElementById("downloadBtn");
 
-  canvas.value.width = 1000;
-  canvas.value.height = 750;
+  canvas.value.width = 2000;
+  canvas.value.height = 1500;
 
   const inputs = document.querySelectorAll("input, select");
   inputs.forEach(input => {
     input.addEventListener("input", debounce(generateStudentCard, 300));
-  });
-
-  form.value.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    await generateStudentCard();
-  });
-
-  document.getElementById("logoUpload").addEventListener("change", function (event) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        loadImage(e.target.result).then(img => {
-          logoImage.value = img;
-          generateStudentCard();
-        });
-      };
-      reader.readAsDataURL(file);
-    }
   });
 
   generateStudentCard();
@@ -61,6 +42,7 @@ async function generateStudentCard() {
       validDate: document.getElementById("validDate").value,
       photo: document.getElementById("photo").files[0],
       background: document.getElementById("background").value,
+      logo: document.getElementById("logoUpload").files[0],
     };
 
     ctx.value.clearRect(0, 0, canvas.value.width, canvas.value.height);
@@ -163,11 +145,15 @@ async function generateStudentCard() {
     ctx.value.fillText(data.major, startX + 70, startY + lineHeight * 4 - 8);
     ctx.value.fillText(data.validDate, startX + 70, startY + lineHeight * 5 - 8);
 
-    if (logoImage.value) {
-      const logoSize = 50;
-      ctx.value.globalAlpha = 0.7;
-      ctx.value.drawImage(logoImage.value, cardX + cardWidth - logoSize - 10, cardY + 10, logoSize, logoSize);
-      ctx.value.globalAlpha = 1.0;
+    // if (logoImage.value) {
+    //   const logoSize = 50;
+    //   ctx.value.globalAlpha = 0.7;
+    //   ctx.value.drawImage(logoImage.value, cardX + cardWidth - logoSize - 10, cardY + 10, logoSize, logoSize);
+    //   ctx.value.globalAlpha = 1.0;
+    // }
+    if (data.logo) {
+      const logo = await loadImage(URL.createObjectURL(data.logo));
+      ctx.value.drawImage(logo, cardX + cardWidth - 50 - 10, cardY + 10, 50, 50);
     }
 
     applyVintageEffect(ctx.value, cardX, cardY, cardWidth, cardHeight);
@@ -231,7 +217,7 @@ function downloadImage() {
   <h1 class="text-2xl font-bold text-center my-4">学生证照片生成器</h1>
   <p class="text-center mb-6">请填写以下信息以生成您的学生证照片。</p>
   <div class="flex justify-between gap-4 mt-4">
-    <div class="w-1/2 p-4 bg-white rounded-lg">
+    <div class="w-1/3 p-4 bg-white rounded-lg">
       <form id="studentForm" class="space-y-4">
         <div class="flex flex-col">
           <label for="name" class="font-semibold mb-1">姓名：</label>
@@ -274,11 +260,13 @@ function downloadImage() {
             <option value="desk4">木质桌面（深色）</option>
           </select>
         </div>
+        <div class="flex flex-col">
+          <button id="downloadBtn" style="display: none" class="bg-green-500 text-white py-2 px-4 rounded" @click="downloadImage">下载照片</button>
+        </div>
       </form>
     </div>
-    <div class="w-1/2 p-4 bg-white rounded-lg text-center">
-      <canvas id="previewCanvas" class="w-full border border-gray-300 rounded mb-4"></canvas>
-      <button id="downloadBtn" style="display: none" class="bg-green-500 text-white py-2 px-4 rounded" @click="downloadImage">下载照片</button>
+    <div class="w-2/3 p-4 bg-white rounded-lg text-center">
+      <canvas id="previewCanvas" class="w-full border border-gray-300 rounded mb-4 transform scale-70 origin-top-left"></canvas>
     </div>
   </div>
 </template>
