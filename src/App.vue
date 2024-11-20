@@ -81,13 +81,13 @@ function toggleLanguage() {
 </script>
 
 <template>
-  <div class="flex justify-between items-center px-4 py-2 bg-gray-100">
-    <h1 class="text-2xl font-bold">{{ t("title") }}</h1>
-    <button @click="toggleLanguage" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+  <header class="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md">
+    <h1 class="text-3xl font-extrabold">{{ t("title") }}</h1>
+    <button @click="toggleLanguage" class="px-4 py-2 bg-white text-blue-600 rounded-full hover:bg-blue-100 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
       {{ locale === "zh" ? "English" : "中文" }}
     </button>
-  </div>
-  <p class="text-center mb-6">{{ t("subtitle") }}</p>
+  </header>
+  <p class="text-center text-xl text-gray-600 my-8 font-light">{{ t("subtitle") }}</p>
 
   <div class="w-full mx-auto px-4">
     <div class="flex justify-between gap-8">

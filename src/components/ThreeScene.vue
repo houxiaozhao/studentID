@@ -59,16 +59,41 @@ const init = () => {
   container.value.appendChild(renderer.domElement);
 
   // Lighting
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
   scene.add(ambientLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  directionalLight.position.set(2, 2, 5);
-  scene.add(directionalLight);
+  // Main directional light (simulating sun)
+  const mainLight = new THREE.DirectionalLight(0xffffff, 0.2);
+  mainLight.position.set(5, 5, 7);
+  mainLight.castShadow = true;
+  mainLight.shadow.mapSize.width = 2048;
+  mainLight.shadow.mapSize.height = 2048;
+  mainLight.shadow.camera.near = 0.5;
+  mainLight.shadow.camera.far = 500;
+  scene.add(mainLight);
 
-  const backLight = new THREE.DirectionalLight(0xffffff, 0.3);
-  backLight.position.set(-2, -2, -5);
+  // Fill light
+  const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  fillLight.position.set(-5, 2, 3);
+  scene.add(fillLight);
+
+  // Back light for rim lighting effect
+  const backLight = new THREE.DirectionalLight(0xffffff, 0.4);
+  backLight.position.set(0, -3, -5);
   scene.add(backLight);
+
+  // Add subtle point lights for specular highlights
+  const pointLight1 = new THREE.PointLight(0xffffff, 0.1);
+  pointLight1.position.set(3, 3, 3);
+  scene.add(pointLight1);
+
+  const pointLight2 = new THREE.PointLight(0xffffff, 0.1);
+  pointLight2.position.set(-3, -3, 3);
+  scene.add(pointLight2);
+
+  // Enable shadow rendering
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   // Create card geometry
   createCard();
@@ -93,9 +118,15 @@ const createCard = () => {
 
   // Create a plane geometry for the card with template-specific dimensions
   const geometry = new THREE.PlaneGeometry(currentTemplate.width / 100, currentTemplate.height / 100);
-  const material = new THREE.MeshPhongMaterial({
+  const material = new THREE.MeshPhysicalMaterial({
     color: 0xffffff,
     side: THREE.DoubleSide,
+    metalness: 0.1,
+    roughness: 0.3,
+    envMapIntensity: 1,
+    clearcoat: 0.3,
+    clearcoatRoughness: 0.2,
+    reflectivity: 1,
   });
 
   card = new THREE.Mesh(geometry, material);
@@ -184,13 +215,19 @@ const updateCardTexture = async () => {
   // Create and apply texture
   const texture = new THREE.CanvasTexture(canvas);
   if (card) {
-    if (card.material instanceof THREE.MeshPhongMaterial) {
+    if (card.material instanceof THREE.MeshPhysicalMaterial) {
       card.material.map = texture;
       card.material.needsUpdate = true;
     } else {
-      card.material = new THREE.MeshPhongMaterial({
+      card.material = new THREE.MeshPhysicalMaterial({
         map: texture,
         side: THREE.DoubleSide,
+        metalness: 0.1,
+        roughness: 0.3,
+        envMapIntensity: 1,
+        clearcoat: 0.3,
+        clearcoatRoughness: 0.2,
+        reflectivity: 1,
       });
     }
   }
