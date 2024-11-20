@@ -1,5 +1,26 @@
-# Vue 3 + Vite
+# 学生证生成器
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+本项目是一个基于网络的应用程序，允许用户生成定制的学生证。它使用 Vue.js 和 Three.js 构建，提供生成的学生证的交互式 3D 预览。
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## 功能特点
+
+- 可定制的学生信息（姓名、学号、学校、院系、专业）
+- 上传个人照片和学校标志
+- 从多种背景选项中选择
+- 具有旋转和缩放功能的交互式 3D 预览
+- 多语言支持（英语和中文）
+
+## 使用的技术
+
+- Vue.js 3
+- Three.js
+- Vue I18n 用于国际化
+- Vite 作为构建工具
+- WindiCSS 用于样式设计
+
+## 开始使用
+
+1. 克隆仓库
+2. 安装依赖：`npm install`
+3. 运行开发服务器：`npm run dev`
+4. 构建生产版本：`npm run build`
