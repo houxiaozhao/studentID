@@ -39,6 +39,14 @@ export const templates = {
             ctx.textAlign = "center";
             ctx.fillText(cardData.school || "", cardX + cardWidth / 2, cardY + 28);
 
+            // 如果有logo，绘制为半透明水印
+            if (cardData.logo) {
+                ctx.globalAlpha = 0.15; // 设置透明度
+                const logoSize = 80;
+                ctx.drawImage(cardData.logo, cardX + cardWidth - logoSize - 30, cardY + cardHeight - logoSize - 30, logoSize, logoSize);
+                ctx.globalAlpha = 1.0; // 恢复透明度
+            }
+
             // 绘制照片框和照片
             ctx.strokeStyle = "#1B4B8A";
             ctx.lineWidth = 1;
@@ -99,26 +107,44 @@ export const templates = {
             gradient.addColorStop(0, '#1a237e');
             gradient.addColorStop(1, '#0d47a1');
             ctx.fillStyle = gradient;
-            ctx.fillRect(cardX, cardY, cardWidth, cardHeight);
+            ctx.beginPath();
+            ctx.moveTo(cardX + 10, cardY);
+            ctx.lineTo(cardX + cardWidth - 10, cardY);
+            ctx.quadraticCurveTo(cardX + cardWidth, cardY, cardX + cardWidth, cardY + 10);
+            ctx.lineTo(cardX + cardWidth, cardY + cardHeight - 10);
+            ctx.quadraticCurveTo(cardX + cardWidth, cardY + cardHeight, cardX + cardWidth - 10, cardY + cardHeight);
+            ctx.lineTo(cardX + 10, cardY + cardHeight);
+            ctx.quadraticCurveTo(cardX, cardY + cardHeight, cardX, cardY + cardHeight - 10);
+            ctx.lineTo(cardX, cardY + 10);
+            ctx.quadraticCurveTo(cardX, cardY, cardX + 10, cardY);
+            ctx.closePath();
+            ctx.fill();
 
-            // 绘制装饰性线条
+            // 绘制科技感线条
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1;
             for (let i = 0; i < 5; i++) {
-                const y = cardY + (i * 50);
                 ctx.beginPath();
-                ctx.moveTo(cardX, y);
-                ctx.lineTo(cardX + cardWidth, y + 30);
+                ctx.moveTo(cardX, cardY + i * 50);
+                ctx.lineTo(cardX + cardWidth, cardY + i * 50 + 30);
                 ctx.stroke();
             }
 
             // 绘制学校名称
             ctx.fillStyle = "#FFFFFF";
             ctx.font = "bold 24px Microsoft YaHei";
-            ctx.textAlign = "left";
-            ctx.fillText(cardData.school || "", cardX + 20, cardY + 40);
+            ctx.textAlign = "center";
+            ctx.fillText(cardData.school || "", cardX + cardWidth / 2, cardY + 28);
 
-            // 绘制照片（带边框效果）
+            // 如果有logo，绘制为半透明水印
+            if (cardData.logo) {
+                ctx.globalAlpha = 0.15; // 设置透明度
+                const logoSize = 100;
+                ctx.drawImage(cardData.logo, cardX + cardWidth/2 - logoSize/2, cardY + cardHeight/2 - logoSize/2, logoSize, logoSize);
+                ctx.globalAlpha = 1.0; // 恢复透明度
+            }
+
+            // 绘制照片框和照片
             const photoX = cardX + cardWidth - 120;
             const photoY = cardY + 60;
             const photoSize = 100;
@@ -166,21 +192,44 @@ export const templates = {
         width: 400,
         height: 250,
         render: (ctx, cardData, t, { cardX, cardY, cardWidth, cardHeight }) => {
-            // 绘制背景
+            // 绘制纯白背景
             ctx.fillStyle = "#FFFFFF";
-            ctx.fillRect(cardX, cardY, cardWidth, cardHeight);
+            ctx.beginPath();
+            ctx.moveTo(cardX + 10, cardY);
+            ctx.lineTo(cardX + cardWidth - 10, cardY);
+            ctx.quadraticCurveTo(cardX + cardWidth, cardY, cardX + cardWidth, cardY + 10);
+            ctx.lineTo(cardX + cardWidth, cardY + cardHeight - 10);
+            ctx.quadraticCurveTo(cardX + cardWidth, cardY + cardHeight, cardX + cardWidth - 10, cardY + cardHeight);
+            ctx.lineTo(cardX + 10, cardY + cardHeight);
+            ctx.quadraticCurveTo(cardX, cardY + cardHeight, cardX, cardY + cardHeight - 10);
+            ctx.lineTo(cardX, cardY + 10);
+            ctx.quadraticCurveTo(cardX, cardY, cardX + 10, cardY);
+            ctx.closePath();
+            ctx.fill();
 
-            // 绘制侧边装饰条
-            ctx.fillStyle = "#2c3e50";
-            ctx.fillRect(cardX, cardY, 8, cardHeight);
+            // 绘制简约风格的顶部边框
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cardX, cardY + 45);
+            ctx.lineTo(cardX + cardWidth, cardY + 45);
+            ctx.stroke();
 
             // 绘制学校名称
-            ctx.fillStyle = "#2c3e50";
-            ctx.font = "bold 20px Microsoft YaHei";
-            ctx.textAlign = "left";
-            ctx.fillText(cardData.school || "", cardX + 30, cardY + 40);
+            ctx.fillStyle = "#333333";
+            ctx.font = "bold 24px Microsoft YaHei";
+            ctx.textAlign = "center";
+            ctx.fillText(cardData.school || "", cardX + cardWidth / 2, cardY + 40);
 
-            // 绘制圆形照片
+            // 如果有logo，绘制为半透明水印
+            if (cardData.logo) {
+                ctx.globalAlpha = 0.15; // 设置透明度
+                const logoSize = 70;
+                ctx.drawImage(cardData.logo, cardX + 20, cardY + cardHeight - logoSize - 20, logoSize, logoSize);
+                ctx.globalAlpha = 1.0; // 恢复透明度
+            }
+
+            // 绘制照片框和照片
             const photoX = cardX + cardWidth - 140;
             const photoY = cardY + 50;
             const photoRadius = 60;

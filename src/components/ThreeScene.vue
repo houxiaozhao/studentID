@@ -183,6 +183,16 @@ const updateCardTexture = async () => {
     }
   }
 
+  // Load logo if available
+  let logoImage = null;
+  if (props.cardData.logo) {
+    try {
+      logoImage = await loadImage(URL.createObjectURL(props.cardData.logo));
+    } catch (error) {
+      console.error("Failed to load logo:", error);
+    }
+  }
+
   // Set card dimensions and position
   const cardWidth = currentTemplate.width;
   const cardHeight = currentTemplate.height;
@@ -199,6 +209,7 @@ const updateCardTexture = async () => {
     {
       ...props.cardData,
       photo: photoImage,
+      logo: logoImage,
     },
     t,
     {
