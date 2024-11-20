@@ -2,6 +2,7 @@ export default {
   title: 'Student ID Card Generator',
   subtitle: 'Please fill in the following information to generate your student ID card.',
   form: {
+    template: 'Template',
     name: 'Name',
     studentId: 'Student ID',
     school: 'School',

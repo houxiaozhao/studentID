@@ -2,11 +2,14 @@
 import { ref, onMounted } from "vue";
 import ThreeScene from "./components/ThreeScene.vue";
 import { useI18n } from "vue-i18n";
+import { templates } from "./templates";
 
 const { t, locale } = useI18n();
 
 const form = ref(null);
 const threeScene = ref(null);
+const selectedTemplate = ref("classic");
+
 const cardData = ref({
   name: "",
   studentId: "",
@@ -91,6 +94,14 @@ function toggleLanguage() {
       <div class="w-300px bg-white p-6 rounded-lg shadow-md">
         <form id="studentForm" class="space-y-4">
           <div class="flex flex-col">
+            <label for="template" class="font-semibold mb-1">{{ t("form.template") }}:</label>
+            <select id="template" v-model="selectedTemplate" class="p-2 border border-gray-300 rounded">
+              <option v-for="(template, id) in templates" :key="id" :value="id">
+                {{ template.name }}
+              </option>
+            </select>
+          </div>
+          <div class="flex flex-col">
             <label for="name" class="font-semibold mb-1">{{ t("form.name") }}：</label>
             <input type="text" id="name" value="张三" required class="p-2 border border-gray-300 rounded" />
           </div>
@@ -140,7 +151,7 @@ function toggleLanguage() {
       </div>
 
       <div class="flex-1 bg-white p-6 rounded-lg shadow-md">
-        <ThreeScene ref="threeScene" :cardData="cardData" />
+        <ThreeScene ref="threeScene" :cardData="cardData" :template="selectedTemplate" />
       </div>
     </div>
   </div>

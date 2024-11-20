@@ -2,6 +2,7 @@ export default {
   title: '学生证照片生成器',
   subtitle: '请填写以下信息以生成您的学生证照片。',
   form: {
+    template: '卡片模板',
     name: '姓名',
     studentId: '学号',
     school: '学校名称',
