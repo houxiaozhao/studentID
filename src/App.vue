@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import ThreeScene from "./components/ThreeScene.vue";
+import { useI18n } from "vue-i18n";
+
+const { t, locale } = useI18n();
 
 const form = ref(null);
 const threeScene = ref(null);
@@ -14,6 +17,7 @@ const cardData = ref({
   photo: null,
   background: "desk1",
   logo: null,
+  customBackground: null,
 });
 
 const backgrounds = {
@@ -43,6 +47,7 @@ async function updateCardData() {
     photo: document.getElementById("photo").files[0],
     background: document.getElementById("background").value,
     logo: document.getElementById("logoUpload").files[0],
+    customBackground: document.getElementById("backgroundUpload").files[0],
   };
 }
 
@@ -66,65 +71,76 @@ function downloadImage() {
   link.download = "student_card.png";
   link.click();
 }
+
+function toggleLanguage() {
+  locale.value = locale.value === "zh" ? "en" : "zh";
+}
 </script>
 
 <template>
-  <h1 class="text-2xl font-bold text-center my-4">学生证照片生成器</h1>
-  <p class="text-center mb-6">请填写以下信息以生成您的学生证照片。</p>
+  <div class="flex justify-between items-center px-4 py-2 bg-gray-100">
+    <h1 class="text-2xl font-bold">{{ t("title") }}</h1>
+    <button @click="toggleLanguage" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+      {{ locale === "zh" ? "English" : "中文" }}
+    </button>
+  </div>
+  <p class="text-center mb-6">{{ t("subtitle") }}</p>
 
   <div class="w-full mx-auto px-4">
     <div class="flex justify-between gap-8">
       <div class="w-300px bg-white p-6 rounded-lg shadow-md">
         <form id="studentForm" class="space-y-4">
           <div class="flex flex-col">
-            <label for="name" class="font-semibold mb-1">姓名：</label>
+            <label for="name" class="font-semibold mb-1">{{ t("form.name") }}：</label>
             <input type="text" id="name" value="张三" required class="p-2 border border-gray-300 rounded" />
           </div>
           <div class="flex flex-col">
-            <label for="studentId" class="font-semibold mb-1">学号：</label>
+            <label for="studentId" class="font-semibold mb-1">{{ t("form.studentId") }}：</label>
             <input type="text" id="studentId" value="20230001" required class="p-2 border border-gray-300 rounded" />
           </div>
           <div class="flex flex-col">
-            <label for="school" class="font-semibold mb-1">学校名称：</label>
+            <label for="school" class="font-semibold mb-1">{{ t("form.school") }}：</label>
             <input type="text" id="school" value="清华大学" required class="p-2 border border-gray-300 rounded" />
           </div>
           <div class="flex flex-col">
-            <label for="department" class="font-semibold mb-1">院系：</label>
+            <label for="department" class="font-semibold mb-1">{{ t("form.department") }}：</label>
             <input type="text" id="department" value="计算机系" required class="p-2 border border-gray-300 rounded" />
           </div>
           <div class="flex flex-col">
-            <label for="major" class="font-semibold mb-1">专业：</label>
+            <label for="major" class="font-semibold mb-1">{{ t("form.major") }}：</label>
             <input type="text" id="major" value="软件工程" required class="p-2 border border-gray-300 rounded" />
           </div>
           <div class="flex flex-col">
-            <label for="validDate" class="font-semibold mb-1">有效期：</label>
+            <label for="validDate" class="font-semibold mb-1">{{ t("form.validDate") }}：</label>
             <input type="date" id="validDate" value="2024-12-31" required class="p-2 border border-gray-300 rounded" />
           </div>
           <div class="flex flex-col">
-            <label for="photo" class="font-semibold mb-1">上传照片：</label>
+            <label for="photo" class="font-semibold mb-1">{{ t("form.photo") }}：</label>
             <input type="file" id="photo" accept="image/*" required class="p-2 border border-gray-300 rounded" />
           </div>
           <div class="flex flex-col">
-            <label for="logoUpload" class="font-semibold mb-1">上传校徽:</label>
+            <label for="logoUpload" class="font-semibold mb-1">{{ t("form.logo") }}：</label>
             <input type="file" id="logoUpload" accept="image/*" class="p-2 border border-gray-300 rounded" />
           </div>
           <div class="flex flex-col">
-            <label for="background" class="font-semibold mb-1">选择背景：</label>
+            <label for="background" class="font-semibold mb-1">{{ t("form.background") }}:</label>
             <select id="background" class="p-2 border border-gray-300 rounded">
-              <option value="desk1" selected>木质桌面</option>
-              <option value="desk2">大理石桌面</option>
-              <option value="desk3">白色桌面</option>
-              <option value="desk4">木质桌面（深色）</option>
+              <option value="desk1" selected>{{ t("backgrounds.desk1") }}</option>
+              <option value="desk2">{{ t("backgrounds.desk2") }}</option>
+              <option value="desk3">{{ t("backgrounds.desk3") }}</option>
+              <option value="desk4">{{ t("backgrounds.desk4") }}</option>
+              <option value="custom">{{ t("backgrounds.custom") }}</option>
             </select>
+            <input v-show="cardData.background === 'custom'" type="file" id="backgroundUpload" accept="image/*" class="p-2 border border-gray-300 rounded" />
+          </div>
+          <div class="flex flex-col">
+            <button id="downloadBtn" @click="downloadImage" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{{ t("download") }}</button>
           </div>
         </form>
       </div>
 
       <div class="flex-1 bg-white p-6 rounded-lg shadow-md">
         <ThreeScene ref="threeScene" :cardData="cardData" />
-        <div class="mt-4 text-center">
-          <button id="downloadBtn" @click="downloadImage" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">下载学生证照片</button>
-        </div>
       </div>
     </div>
   </div>

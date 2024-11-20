@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch, defineEmits, defineExpose } from "vue";
 import * as THREE from "three";
+import { useI18n } from "vue-i18n";
+
+const { t, locale } = useI18n();
 
 const props = defineProps({
   cardData: {
@@ -102,10 +105,23 @@ const updateCardTexture = async () => {
   const ctx = canvas.getContext("2d");
 
   // Draw background first if available
+  console.log(props.cardData.background);
+
   if (props.cardData.background) {
     try {
-      const bgImage = await loadImage(backgrounds[props.cardData.background]);
-      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+      if (props.cardData.background === "custom" && props.cardData.customBackground) {
+        console.log("自定义", props.cardData);
+        const fileUrl = URL.createObjectURL(props.cardData.customBackground);
+        const bgImage = await loadImage(fileUrl);
+        ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(fileUrl);
+
+        // const bgImage = await loadImage(props.cardData.background);
+        // ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+      } else {
+        const bgImage = await loadImage(backgrounds[props.cardData.background]);
+        ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+      }
     } catch (error) {
       console.error("Failed to load background:", error);
     }
@@ -179,12 +195,15 @@ const updateCardTexture = async () => {
 
   // Draw text fields
   ctx.fillStyle = "#333333";
-  ctx.font = "16px Microsoft YaHei";
+  ctx.font = "14px Microsoft YaHei";
   ctx.textAlign = "left";
 
   const startX = cardX + 130;
   const startY = cardY + 60;
   const lineHeight = 30;
+  const labelWidth = 90;
+  const textStartX = startX + 10;
+  const valueStartX = startX + labelWidth + 15;
 
   // Draw lines
   for (let i = 0; i <= 5; i++) {
@@ -198,28 +217,24 @@ const updateCardTexture = async () => {
 
   // Draw vertical line
   ctx.beginPath();
-  ctx.moveTo(startX + 60, startY);
-  ctx.lineTo(startX + 60, startY + 5 * lineHeight);
+  ctx.moveTo(startX + labelWidth, startY);
+  ctx.lineTo(startX + labelWidth, startY + lineHeight * 5);
   ctx.stroke();
 
   // Draw labels
-  const textStartX = startX + 10;
-  ctx.fillStyle = "#333333";
-  ctx.font = "14px Microsoft YaHei";
-
-  ctx.fillText("姓名", textStartX, startY + lineHeight - 8);
-  ctx.fillText("学号", textStartX, startY + lineHeight * 2 - 8);
-  ctx.fillText("院系", textStartX, startY + lineHeight * 3 - 8);
-  ctx.fillText("专业", textStartX, startY + lineHeight * 4 - 8);
-  ctx.fillText("有效期", textStartX, startY + lineHeight * 5 - 8);
+  ctx.fillText(t("form.name"), textStartX, startY + lineHeight - 8);
+  ctx.fillText(t("form.studentId"), textStartX, startY + lineHeight * 2 - 8);
+  ctx.fillText(t("form.department"), textStartX, startY + lineHeight * 3 - 8);
+  ctx.fillText(t("form.major"), textStartX, startY + lineHeight * 4 - 8);
+  ctx.fillText(t("form.validDate"), textStartX, startY + lineHeight * 5 - 8);
 
   // Draw values
-  ctx.font = "bold 14px Microsoft YaHei";
-  ctx.fillText(props.cardData.name || "", startX + 70, startY + lineHeight - 8);
-  ctx.fillText(props.cardData.studentId || "", startX + 70, startY + lineHeight * 2 - 8);
-  ctx.fillText(props.cardData.department || "", startX + 70, startY + lineHeight * 3 - 8);
-  ctx.fillText(props.cardData.major || "", startX + 70, startY + lineHeight * 4 - 8);
-  ctx.fillText(props.cardData.validDate || "", startX + 70, startY + lineHeight * 5 - 8);
+  ctx.textAlign = "left";
+  ctx.fillText(props.cardData.name || "", valueStartX, startY + lineHeight - 8);
+  ctx.fillText(props.cardData.studentId || "", valueStartX, startY + lineHeight * 2 - 8);
+  ctx.fillText(props.cardData.department || "", valueStartX, startY + lineHeight * 3 - 8);
+  ctx.fillText(props.cardData.major || "", valueStartX, startY + lineHeight * 4 - 8);
+  ctx.fillText(props.cardData.validDate || "", valueStartX, startY + lineHeight * 5 - 8);
 
   // Draw logo if available
   if (props.cardData.logo) {
@@ -361,11 +376,13 @@ const captureScene = () => {
 // Expose capture method to parent
 defineExpose({ captureScene });
 
-// Watch for changes in card data
+// Watch for changes in card data and locale
 watch(
-  () => props.cardData,
+  [() => props.cardData, locale],
   () => {
-    updateCardTexture();
+    if (card) {
+      updateCardTexture();
+    }
   },
   { deep: true }
 );
@@ -394,8 +411,6 @@ onBeforeUnmount(() => {
 <style scoped>
 .three-container {
   width: 100%;
-  height: 600px;
-  background: #f0f0f0;
-  user-select: none;
+  height: 100%;
 }
 </style>
